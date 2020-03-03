@@ -1,7 +1,8 @@
-# Specific OS distribution to utilize as base image
-FROM {{ os_version }}
+ARG install_dir=/opt/zcashd
 
-LABEL maintainer="O1.IO"
+FROM {{ os_version }} AS builder
+
+ARG install_dir
 {% if system_dependencies|length > 0 %}
 
 RUN {{ package_manager }} update -y && \
@@ -9,7 +10,6 @@ RUN {{ package_manager }} update -y && \
     {{ package_manager }} install -y {{ system_dependencies|join(' ') }}
 {% endif %}
 
-ENV install_dir=/opt/zcashd
 RUN mkdir -p $install_dir
 
 WORKDIR $install_dir
@@ -17,15 +17,18 @@ RUN git clone {{ git_url }} $install_dir && git reset --hard {{ git_version }}
 RUN $install_dir/zcutil/build.sh -j$(nproc)
 RUN $install_dir/zcutil/fetch-params.sh
 
-RUN mkdir /entrypoint.d
-COPY entrypoints/setup-config.sh  /entrypoint.d
+FROM {{ os_version }}
 
-COPY scripts/entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
+LABEL maintainer="O1.IO"
 
-COPY scripts/start-zcashd.sh /usr/bin/start-zcashd.sh
-RUN chmod +x /usr/bin/start-zcashd.sh
+ARG install_dir
+COPY --from=builder $install_dir/src/zcashd $install_dir/src/zcash-cli /usr/bin/
+COPY --from=builder /root/.zcash-params /root/.zcash-params
 
-ENTRYPOINT ["/entrypoint.sh"]
+COPY scripts /usr/bin
+RUN chmod +x /usr/bin/entrypoint.sh /usr/bin/start-zcashd.sh
+COPY entrypoints  /entrypoint.d
+
+ENTRYPOINT ["entrypoint.sh"]
 
 CMD ["start-zcashd.sh"]

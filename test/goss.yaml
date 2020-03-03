@@ -1,6 +1,13 @@
 # test resource verification spec
 file:
-  /opt/zcashd/src/zcashd:
+  /usr/bin/zcashd:
+    exists: true
+    mode: "0755"
+    owner: root
+    group: root
+    filetype: file
+file:
+  /usr/bin/zcash-cli:
     exists: true
     mode: "0755"
     owner: root
@@ -19,7 +26,7 @@ file:
       - "sendfreetransactions ="
       - "gen ="
 command:
-  /opt/zcashd/src/zcashd --help:
+  zcashd --help:
     exit-status: 0
 process:
   zcashd:
