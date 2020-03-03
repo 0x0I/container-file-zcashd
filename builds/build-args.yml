@@ -110,6 +110,7 @@ build_matrix:
       - curl
       - bsdmainutils
       - automake
+      - lbzip2
   - name: ubuntu-19.04
     os_version: ubuntu:19.04
     package_manager: apt-get
@@ -129,6 +130,7 @@ build_matrix:
       - curl
       - bsdmainutils
       - automake
+      - lbzip2
   - name: debian-8
     os_version: debian:8
     package_manager: apt-get

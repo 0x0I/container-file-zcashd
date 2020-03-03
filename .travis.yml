@@ -5,10 +5,11 @@ services:
 env:
   - OS_VERSION=centos-7
   - OS_VERSION=centos-8
-  #- OS_VERSION=fedora-29
-  #- OS_VERSION=fedora-30
-  #- OS_VERSION=fedora-31
-  #- OS_VERSION=debian-8
+  - OS_VERSION=fedora-29
+  - OS_VERSION=fedora-30
+  - OS_VERSION=fedora-31
+  - OS_VERSION=ubuntu-18.04
+  - OS_VERSION=ubuntu-19.04
 
 before_script:
   - sudo curl -fsSL https://goss.rocks/install | sudo sh
