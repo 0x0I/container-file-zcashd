@@ -5,10 +5,10 @@ services:
 env:
   - OS_VERSION=centos-7
   - OS_VERSION=centos-8
-  - OS_VERSION=fedora-29
-  - OS_VERSION=fedora-30
-  - OS_VERSION=fedora-31
-  - OS_VERSION=debian-8
+  #- OS_VERSION=fedora-29
+  #- OS_VERSION=fedora-30
+  #- OS_VERSION=fedora-31
+  #- OS_VERSION=debian-8
 
 before_script:
   - sudo curl -fsSL https://goss.rocks/install | sudo sh
@@ -16,6 +16,5 @@ before_script:
   - ansible-playbook builds/build-playbook.yml -v
 
 script:
-    - echo "Yay testing"
-    #- docker build --file builds/artifacts/${OS_VERSION}/Containerfile --tag testing-zcashd:${OS_VERSION} .
-    #- GOSS_FILES_PATH=test dgoss run testing-zcashd:${OS_VERSION}
+    - docker build --file builds/artifacts/${OS_VERSION}/Containerfile --tag testing-zcashd:${OS_VERSION} .
+    - GOSS_FILES_PATH=test dgoss run --env-file test/config-test.env testing-zcashd:${OS_VERSION}

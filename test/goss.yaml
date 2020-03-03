@@ -1,14 +1,27 @@
 # test resource verification spec
 file:
-  /tmp/testing.txt:
+  /opt/zcashd/src/zcashd:
+    exists: true
+    mode: "0755"
+    owner: root
+    group: root
+    filetype: file
+file:
+  /mnt/zcashd/zcash.conf:
     exists: true
     mode: "0644"
     owner: root
     group: root
     filetype: file
     contains:
-      - "Yay! Testing"
-# service:
-#  example:
-#    enabled: true
-#    running: true
+      - "testnet ="
+      - "server ="
+      - "sendfreetransactions ="
+      - "gen ="
+command:
+  /opt/zcashd/src/zcashd --help:
+    exit-status: 0
+process:
+  zcashd:
+    running: true
+    skip: false
