@@ -55,6 +55,7 @@ build_matrix:
       - gcc-c++
       - libtool
       - patch
+      - lbzip2
   - name: fedora-30
     os_version: fedora:30
     system_dependencies:
@@ -73,6 +74,7 @@ build_matrix:
       - patch
       - glibc-static
       - libstdc++-static
+      - lbzip2
   - name: fedora-31
     os_version: fedora:31
     system_dependencies:
@@ -91,6 +93,7 @@ build_matrix:
       - patch
       - glibc-static
       - libstdc++-static
+      - lbzip2
   - name: ubuntu-18.04
     os_version: ubuntu:18.04
     package_manager: apt-get
