@@ -1,14 +1,31 @@
 # Specific OS distribution to utilize as base image
 FROM {{ os_version }}
 
-# Install/build application binaries
-RUN mkdir /entrypoint.d
-COPY entrypoints/default-entrypoint.sh  /entrypoint.d
+LABEL maintainer="O1.IO"
+{% if system_dependencies|length > 0 %}
 
-# set ENTRYPOINT
+RUN {{ package_manager }} update -y && \
+    {{ package_manager }} upgrade -y && \
+    {{ package_manager }} install -y {{ system_dependencies|join(' ') }}
+{% endif %}
+
+ENV install_dir=/opt/zcashd
+RUN mkdir -p $install_dir
+
+WORKDIR $install_dir
+RUN git clone {{ git_url }} $install_dir && git reset --hard {{ git_version }}
+RUN $install_dir/zcutil/build.sh -j$(nproc)
+RUN $install_dir/zcutil/fetch-params.sh
+
+RUN mkdir /entrypoint.d
+COPY entrypoints/setup-config.sh  /entrypoint.d
+
 COPY scripts/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
+COPY scripts/start-zcashd.sh /usr/bin/start-zcashd.sh
+RUN chmod +x /usr/bin/start-zcashd.sh
+
 ENTRYPOINT ["/entrypoint.sh"]
 
-# set (default) CMD
+CMD ["start-zcashd.sh"]
