@@ -36,6 +36,7 @@ debian_dependencies: &debian_deps
     - python-zmq
     - zlib1g-dev
     - curl
+    - wget
     - bsdmainutils
     - automake
     - lbzip2
