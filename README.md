@@ -40,7 +40,7 @@ Variables are available and organized according to the following software & mach
 
 #### Config
 
-**Zcashd** supports specification of various options controlling aspects of the Zcashd client's behavior and operational profile. Each configuration can be expressed within a simple configuration file, `zcashd.conf` by default, composed of **key=vaue** pairs representing the aforementioned configuration properties available.
+**Zcashd** supports specification of various options controlling aspects of the Zcashd client's behavior and operational profile. Each configuration can be expressed within a simple configuration file, `zcashd.conf` by default, composed of **key=vaue** pairs representing configuration properties available.
 
 _The following details the facilities provided by this role to manage the  location and content of the aforementioned configuration file:_
 
