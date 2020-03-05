@@ -40,12 +40,12 @@ Variables are available and organized according to the following software & mach
 
 #### Config
 
-**Zcashd** supports specification of various options controlling aspects of the Zcashd client's behavior and operational profile. Each configuration can be expressed within in a simple configuration file, `zcashd.conf` by default, composed of **key=vaue** pairs representing the aforementioned configuration properties available.
+**Zcashd** supports specification of various options controlling aspects of the Zcashd client's behavior and operational profile. Each configuration can be expressed within a simple configuration file, `zcashd.conf` by default, composed of **key=vaue** pairs representing the aforementioned configuration properties available.
 
 _The following details the facilities provided by this role to manage the  location and content of the aforementioned configuration file:_
 
 `$ZCASHD_CONFIG_DIR=</path/to/configuration/dir>` (**default**: `/etc/zcashd`)
-- path on target host where the `zcashd` configuration should be stored
+- path where the `zcashd` configuration should be stored
 
 ```bash
 ZCASHD_CONFIG_DIR=/mnt/etc/zcashd
@@ -53,7 +53,7 @@ ZCASHD_CONFIG_DIR=/mnt/etc/zcashd
 
 As indicated, available configuration options are organized according to the systems/subsystems they are used to manage. For a reference to the list of available configuration options, see [here](https://zcash.readthedocs.io/en/latest/rtd_pages/zcash_conf_guide.html).
 
-Each of these configurations can be expressed using the `zcashd_config` hash, which contains a list of various `zcashd` configuration options (hash) objects organized according to the following:
+Each of these configurations can be expressed using environment variables prefixed with `CONFIG_*`, organized according to the following:
 * **network-related** - settings related to client network broadcasting and listening properties
 * **json-rpc** - JSON-RPC server interfacing properties
 * **transaction-fee** - client properties managing cost of verifying network transactions
@@ -61,7 +61,7 @@ Each of these configurations can be expressed using the `zcashd_config` hash, wh
 
 `$CONFIG_<config-property> = <property-value (string)>` **default**: *None*
 
-* Any configuration setting/value key-pair supported by `zcashd` should be expressible within each `CONFIG_*` environment variable and properly rendered within the associated config. **Note:** `<config-property>` along with the other property value specifications should be written as expected to be rendered within the associated config (**e.g.** *CONFIG_testnet=1*).
+* Any configuration setting/value key-pair supported by `zcashd` should be expressible within each `CONFIG_*` environment variable and properly rendered within the associated config. **Note:** `<config-property>` along with the `,property-value` specifications should be written as expected to be rendered within the associated config (**e.g.** *CONFIG_testnet=1*).
 
 Furthermore, configuration is not constrained by hardcoded author defined defaults or limited by pre-baked templating. If the config section, setting and value are recognized by the `zcashd` tool, :thumbsup: to define within an environnment variable according to the following syntax.
 
@@ -83,32 +83,35 @@ Furthermore, configuration is not constrained by hardcoded author defined defaul
 
 #### Launch
 
-Running the `zcashd` client and RPC server, is accomplished utilizing official **Zcashd** binaries, obtained from [here](https://github.com/zcash/zcash/releases). Launched subject to the configuration and execution potential provided by the underlying application, the `zcashd` client and RPC server can be set to adhere to system administrative policies right for your environment and organization.
+Running the `zcashd` client and RPC server is accomplished utilizing official **Zcashd** binaries, obtained from zcash's github [site](https://github.com/zcash/zcash/releases). Launched subject to the configuration and execution potential provided by the underlying application, the `zcashd` client and RPC server can be set to adhere to system administrative policies right for your environment and organization.
 
 _The following variables can be customized to manage Zcashd's execution profile/policy:_
 
 `$EXTRA_ARGS: <zcashd-cli-options>` (**default**: *NONE*)
 - list of `zcashd` commandline arguments to pass to the binary at runtime for customizing launch.
 
-  Supporting full expression of `zcashd`'s [cli](https://zcash.readthedocs.io/en/latest/rtd_pages/user_guide.html#using-zcash) and, consequently the full set of configuration options as referenced and described above, this variable enables the launch to be customized according to the user's exact specification.
+  Supporting full expression of `zcashd`'s [cli](https://zcash.readthedocs.io/en/latest/rtd_pages/user_guide.html#using-zcash), this variable enables the launch to be customized according to the user's exact specification.
 
 ##### Examples
 
-  Connect to either the Ropsten PoW(proof-of-work) or Rinkeby PoA(proof-of-authory) pre-configured test network:
+  Debug a particular category/subsystem of zcashd's operation:
   ```bash
-  EXTRA_ARGS=--testnet # POW
-  # ...or...
-  EXTRA_ARGS=--rinkeby # POA
+  EXTRA_ARGS=-debug=net # network operations
   ```
 
-  Enhance logging and debugging capabilities for troubleshooting issues:
+  Include timestamps and IPs in debug output:
   ```bash
-  EXTRA_ARGS=--debug --verbosity 5 --trace /tmp/geth.trace
+  EXTRA_ARGS="-logips -logtimestamps"
   ```
 
-  Enable client and server profiling for analytics and testing purposes:
+  Connect to the test network and enable acceptance of public REST requests:
   ```
-  EXTRA_ARGS=--pprof --memprofilerate 1048576 --blockprofilerate 1 --cpuprofile /tmp/geth-cpu-profile
+  EXTRA_ARGS="-testnet -rest"
+  ```
+  
+  Activate mining and set the number of cores to allocate to mining operations:
+  ```
+  EXTRA_ARGS="-gen -genproclimit=4"
   ```
 
 Dependencies
@@ -120,20 +123,36 @@ Example Run
 ----------------
 Basic setup with defaults:
 ```
-podman run 0labs/0x01.zcashd:centos-7
+podman run 0labs/0x01.zcashd:2.1.1-1_centos-7
 ```
 
-Launch an Ethereum light client and connect it to the Rinkeby PoA (Proof of Authority) test network:
+Connect to testnet and customize the location of the data directory:
 ```
-podman run --env CONFIG_Eth_SyncMode=light --env EXTRA_ARGS=--rinkeby 0labs/0x01.geth:centos-7
+podman run --env CONFIG_testnet=1 --env EXTRA_ARGS="-datadir=/mnt/data/zcashd" --volume zcashd_data:/mnt/data/zcashd 0labs/0x01.zcashd:2.1.1-1_centos-7
 ```
 
-Run a full Ethereum node using "fast" sync-mode (only process most recent transactions), enabling both the RPC server interface and client miner and overriding the (block) data directory:
+Connect client to mainnet and enable both REST and RPC servers:
 ```
-podman run --env CONFIG_Eth_SyncMode=fast \
-           --env CONFIG_Node_DataDir=/mnt/geth/data \
-           --env EXTRA_ARGS="--rpc --rpcaddr='0.0.0.0' --mine --miner.threads 16" \
-           0labs/0x01.geth:centos-7
+podman run --env CONFIG_testnet=0 \
+           --env CONFIG_listen=1 \
+           --env CONFIG_server=1 \
+           --env CONFIG_rpcuser=ops \
+           --env CONFIG_rpcgroups=ops \
+           --env EXTRA_ARGS="-rest -bind='0.0.0.0'" \
+           0labs/0x01.zcashd:2.1.1-1_centos-7
+```
+
+Send transactions as zero-fee transactions and rescan the blockchain for missing wallet transactions on startup:
+```
+podman run --env CONFIG_sendfreetransactions=1 --env EXTRA_ARGS="-rescan" 0labs/0x01.zcashd:2.1.1-1_centos-7
+```
+
+Enable CPU mining with more efficient hash algorithm solver(exposing ALL cores for use):
+```
+podman run --env CONFIG_gen=1 \
+           --env CONFIG_genproclimit=-1 \
+           --env CONFIG_equihashsolver=tromp
+           0labs/0x01.zcashd:2.1.1-1_centos-7
 ```
 
 License
