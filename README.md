@@ -53,7 +53,7 @@ ZCASHD_CONFIG_DIR=/mnt/etc/zcashd
 
 As indicated, available configuration options are organized according to the systems/subsystems they are used to manage. For a reference to the list of available configuration options, see [here](https://zcash.readthedocs.io/en/latest/rtd_pages/zcash_conf_guide.html).
 
-Each of these configurations can be expressed using environment variables prefixed with `CONFIG_*`, organized according to the following:
+Each of these configurations can be expressed using environment variables prefixed with `CONFIG_`, organized according to the following:
 * **network-related** - settings related to client network broadcasting and listening properties
 * **json-rpc** - JSON-RPC server interfacing properties
 * **transaction-fee** - client properties managing cost of verifying network transactions
@@ -61,7 +61,7 @@ Each of these configurations can be expressed using environment variables prefix
 
 `$CONFIG_<config-property> = <property-value (string)>` **default**: *None*
 
-* Any configuration setting/value key-pair supported by `zcashd` should be expressible within each `CONFIG_*` environment variable and properly rendered within the associated config. **Note:** `<config-property>` along with the `,property-value` specifications should be written as expected to be rendered within the associated config (**e.g.** *CONFIG_testnet=1*).
+* Any configuration setting/value key-pair supported by `zcashd` should be expressible within each `CONFIG_*` environment variable and properly rendered within the associated config. **Note:** `<config-property>` along with the `,property-value` specifications should be written as expected to be rendered within the associated config (**e.g.** `CONFIG_testnet=1`).
 
 Furthermore, configuration is not constrained by hardcoded author defined defaults or limited by pre-baked templating. If the config section, setting and value are recognized by the `zcashd` tool, :thumbsup: to define within an environnment variable according to the following syntax.
 
@@ -163,4 +163,4 @@ MIT
 Author Information
 ------------------
 
-This Container file was created in 2020 by O1.IO.
+This Containerfile was created in 2020 by O1.IO.
