@@ -142,7 +142,7 @@ podman run --env CONFIG_testnet=0 \
            0labs/0x01.zcashd:2.1.1-1_centos-7
 ```
 
-Send transactions as zero-fee transactions and rescan the blockchain for missing wallet transactions on startup:
+Send transactions as zero-fee transactions when possible and rescan the blockchain for missing wallet transactions on startup:
 ```
 podman run --env CONFIG_sendfreetransactions=1 --env EXTRA_ARGS="-rescan" 0labs/0x01.zcashd:2.1.1-1_centos-7
 ```
