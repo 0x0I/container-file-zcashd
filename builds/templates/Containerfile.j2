@@ -6,7 +6,6 @@ ARG install_dir
 {% if system_dependencies|length > 0 %}
 
 RUN {{ package_manager }} update -y && \
-    {{ package_manager }} upgrade -y && \
     {{ package_manager }} install -y {{ system_dependencies|join(' ') }}
 {% endif %}
 
