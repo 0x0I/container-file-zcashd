@@ -138,7 +138,7 @@ podman run --env CONFIG_testnet=0 \
            --env CONFIG_server=1 \
            --env CONFIG_rpcuser=ops \
            --env CONFIG_rpcgroups=ops \
-           --env EXTRA_ARGS="-rest -bind='0.0.0.0'" \
+           --env EXTRA_ARGS="-rest -bind=0.0.0.0" \
            0labs/0x01.zcashd:v2.1.1-1_ubuntu-19.04
 ```
 
