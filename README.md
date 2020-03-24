@@ -151,7 +151,7 @@ Enable CPU mining with more efficient hash algorithm solver(exposing ALL cores f
 ```
 podman run --env CONFIG_gen=1 \
            --env CONFIG_genproclimit=-1 \
-           --env CONFIG_equihashsolver=tromp
+           --env CONFIG_equihashsolver=tromp \
            0labs/0x01.zcashd:v2.1.1-1_ubuntu-19.04
 ```
 
