@@ -108,7 +108,7 @@ _The following variables can be customized to manage Zcashd's execution profile/
   ```
   EXTRA_ARGS="-testnet -rest"
   ```
-  
+
   Activate mining and set the number of cores to allocate to mining operations:
   ```
   EXTRA_ARGS="-gen -genproclimit=4"
@@ -128,7 +128,7 @@ podman run 0labs/0x01.zcashd:v2.1.1-1_ubuntu-18.04
 
 Connect to testnet and customize the location of the data directory:
 ```
-podman run --env CONFIG_testnet=1 --env EXTRA_ARGS="-datadir=/mnt/data/zcashd" --volume zcashd_data:/mnt/data/zcashd 0labs/0x01.zcashd:v2.1.1-1_ubuntu-19.04
+podman run --env CONFIG_testnet=1 --env EXTRA_ARGS="-datadir=/mnt/data/zcashd" --volume zcashd_data:/mnt/data/zcashd 0labs/0x01.zcashd:v2.1.1-1_ubuntu-19.10
 ```
 
 Connect client to mainnet and enable both REST and RPC servers:
@@ -139,12 +139,12 @@ podman run --env CONFIG_testnet=0 \
            --env CONFIG_rpcuser=ops \
            --env CONFIG_rpcgroups=ops \
            --env EXTRA_ARGS="-rest -bind=0.0.0.0" \
-           0labs/0x01.zcashd:v2.1.1-1_ubuntu-19.04
+           0labs/0x01.zcashd:v2.1.1-1_ubuntu-19.10
 ```
 
 Send transactions as zero-fee transactions when possible and rescan the blockchain for missing wallet transactions on startup:
 ```
-podman run --env CONFIG_sendfreetransactions=1 --env EXTRA_ARGS="-rescan" 0labs/0x01.zcashd:v2.1.1-1_ubuntu-19.04
+podman run --env CONFIG_sendfreetransactions=1 --env EXTRA_ARGS="-rescan" 0labs/0x01.zcashd:v2.1.1-1_ubuntu-19.10
 ```
 
 Enable CPU mining with more efficient hash algorithm solver(exposing ALL cores for use):
@@ -152,7 +152,7 @@ Enable CPU mining with more efficient hash algorithm solver(exposing ALL cores f
 podman run --env CONFIG_gen=1 \
            --env CONFIG_genproclimit=-1 \
            --env CONFIG_equihashsolver=tromp \
-           0labs/0x01.zcashd:v2.1.1-1_ubuntu-19.04
+           0labs/0x01.zcashd:v2.1.1-1_ubuntu-19.10
 ```
 
 License
